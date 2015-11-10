@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import BaseHTTPServer, select, socket
 import proxy
-import debug_server
 
     #__base = BaseHTTPServer.BaseHTTPRequestHandler
     #__base_handle = __base.handle
 
 class ProxyHandler (BaseHTTPServer.BaseHTTPRequestHandler):
-    server_version = "PyProxy/0.1"
+    server_version = "socks2conn/0.1"
     rbufsize = 0                        # self.rfile Be unbuffered
 
     def do_CONNECT(self):
@@ -19,8 +18,7 @@ class ProxyHandler (BaseHTTPServer.BaseHTTPRequestHandler):
             self.host_and_port = netloc, 80
         try:
             print "\t" "connect to %s:%d" %self.host_and_port
-            self.log_request(200)
-            self.do_ssl_rw()
+            self.tunnel()
         finally:
             print "\t" "bye"
             self.connection.close()

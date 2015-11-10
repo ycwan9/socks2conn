@@ -3,11 +3,15 @@ import select
 import proxyHandler
 import socks
 
+def set_socks(stype, shost, sport):
+    socks.setdefaultproxy(stype, shost, sport)
+    
 class proxy(proxyHandler.ProxyHandler): 
-    def do_ssl_rw(self, max_idling=20):
+    def tunnel(self, max_idling=20):
         print "reading & writing %s on port %i"%self.host_and_port
         try:
-            soc = socket.create_connection(self.host_and_port)
+            soc = socks.socksocket()
+            soc.connect(self.host_and_port)
             self.wfile.write(self.protocol_version +
                              " 200 Connection established\r\nProxy-agent: %s\r\n\r\n"%self.version_string())
             count = 0
